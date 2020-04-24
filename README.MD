@@ -1,4 +1,4 @@
-# Message Broker Based System for We1ather Prediction
+# Message Broker Based System for Weather Prediction
 This project was done for the Real Time Applications Programming Lab at the University of Moldova, Software Engineering program.
 Topic: Changing Lab1 with message broker and more changes
 
