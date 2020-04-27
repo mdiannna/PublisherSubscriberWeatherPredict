@@ -16,3 +16,12 @@ for i in range(1, 5000):
 # mSubscriber =  Subscriber(connection, "topic1")
 # # mSubscriber.fetch()
 # mSubscriber.receive_messages()
+
+
+# Reading list:
+# https://wiki.python.org/moin/UdpCommunication
+# https://en.wikipedia.org/wiki/Message_broker
+# https://medium.com/@xaviergeerinck/an-introduction-to-message-brokers-9bd203b4ebbd
+# https://github.com/ask/kombu
+# https://docs.celeryproject.org/projects/kombu/en/stable/userguide/examples.html
+# https://github.com/ask/carrot/
