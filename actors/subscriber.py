@@ -3,9 +3,10 @@ import socket
 
 class Subscriber():
 	# def __init__(connection, queue, topic, routing_key):
-	def __init__(self, connection, topic):
+	def __init__(self, connection, name):
 		self.connection = connection
 		self.topic = topic
+		self.name = name
 		# self.queue = queue
 		# self.routing_key = routing_key
 
@@ -13,8 +14,13 @@ class Subscriber():
 	# 	# TODO
 	# 	pass
 
+	def subscribe(self, topic):
+		# TODO: add queue / list for multiple topics
+		self.topic = topic
+
 	# equivalent to wait
 	def receive_messages(self):
+		# TODO: if topic == topic sau topic inclus in lista de topicuri
 		# sock = socket.socket(socket.AF_INET, # Internet
 		sock, hostname, port = self.connection
 		UDP_IP = "127.0.0.1"
@@ -34,7 +40,7 @@ class Subscriber():
 		while True:
 			print("waiting...")
 			data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-			print("received message:" + data)
+			print("received message:" + data.decode())
 
 
 	def fetch(self):

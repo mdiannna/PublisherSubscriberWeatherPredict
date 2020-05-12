@@ -10,7 +10,7 @@ class Publisher():
 	def publish(self, message):
 		conn, hostname, port = self.connection
 		# conn.sendto(message, (UDP_IP, UDP_PORT))
-		conn.sendto(message, (hostname, port))
+		conn.sendto(message.encode(), (hostname, port))
 
 
 	def close(self):
