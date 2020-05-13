@@ -1,39 +1,79 @@
 # channel=topic
-import socket
+from .actors import Actor, States
 
+class MessageBroker(Actor):
+	def __init__(self, name):
+		self.name = name
+        self.state = States.Idle
 
-class MessageBroker():
-	def __init__(self, hostname, port):
-		self.hostname = hostname
-		self.port = port
+    	# self.topicsActors = {"":[]}
+    	self.topicsActors = {}
 
-	def createConnection(self):
-		sock = socket.socket(socket.AF_INET, # Internet
-		                     socket.SOCK_DGRAM) # UDP
+	def subscribe(self, actorname, topic):
+		if not topic in self.topicsActors:
+			self.topicsActors[topic] = []
 
-		return sock, self.hostname, self.port
+		self.topicsActors[topic].append(actorname)
+	
+	def unsubscribe(self, actorname, topic):
+		if topic in self.topicsActors:
+			self.topicsActors[topic].remove(actorname)
+		# TODO?????
+		# actorname.inbox.put("You unsubscribed from topic")
 
+	# TODO: test
+	def publish(self, topic, message):
+		# Find all actors subscribed to topic
+		# actor.inbox.put()
+		actorSubscribedTopic = self.topicsActors[topic]
 
-	def subscribe(self):
-		pass
+		for actorname in actorSubscribedTopic:
+			directory.get(actorname).inbox.put(message)
 
-	def publish(self):
-		pass
+	def separateCommands(self, message):
+		separatorIndex1 = message.find('":"')
+        command1 = message[2:separatorIndex1]
+        separatorIndex2 = message[(separatorIndex1+3):].find('":"') +separatorIndex1+3
+        command2 = message[(separatorIndex1+3):separatorIndex2]
+        command3 = message[(separatorIndex2+3):-2]
 
+        return command1, command2, command3
 
+	# can receive message formats:
+	# {"subscribe":"actorname":"topic"}	
+	# {"unsubscribe":"actorname":"topic"}	
+	# {"publish":"topic":"message"}	
+	def receive(self, messagae):
+        self.state = States.Running
 
-# class BrokerConnection():
-# 	hostname = "localhost"
-# 	port = 0
-# 	userid = ""
-# 	password = ""
-# 	virtual_host = ""
+        isValid = True
 
-# 	def __init__(hostname, port, userid, password, virtual_host):
-# 		# TODO
-# 		pass
+        if message[0] != "{":
+        	isValid = False
+        	# # TOOD" nu stiu daca trebuie sa returneze ceva
+        	# return "MESSAGE_NOT_VALID"
 
+        command1, command2, command3 = self.separateCommands(message)
 
-#conn =  BrokerConnection(hostname="localhost", port=5672,
-# ...                           userid="test", password="test",
-# ...                           virtual_host="test")
+        if command1=="subscribe":
+        	actorname = command2
+        	topic = command3
+        	self.subscribe(actorname, topic)
+
+        elif(command1=="publish"):
+        	topic = command2
+        	message = command3
+			self.publish(topic, message)
+
+        elif(command1=="unsubscribe"):
+        	actorname = command2
+        	topic = command3
+        	self.unsubscribe(actorname, topic)
+
+        else:
+        	isValid = false
+        	# MESSAGE NOT VALID
+
+			
+
+		
